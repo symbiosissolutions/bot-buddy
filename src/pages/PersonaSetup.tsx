@@ -112,8 +112,11 @@ export function PersonaSetup() {
         return (
           <AvatarUpload
             onAvatarChange={handleAvatarChange}
+            // Generate a preview URL for the uploaded avatar file
             currentAvatar={
-              typeof inputs.avatar === "string" ? inputs.avatar : undefined
+              inputs.avatar instanceof File
+                ? URL.createObjectURL(inputs.avatar)
+                : null
             }
           />
         );
