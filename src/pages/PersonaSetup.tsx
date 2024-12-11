@@ -2,8 +2,6 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { useState } from "react";
 
-import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
-
 import { slideVariants } from "../utils/animationVariants";
 
 import { IPersonaInputs, IPersonalityTrait } from "../types/PersonaTypes";
@@ -12,6 +10,7 @@ import { PERSONA_QUESTIONS } from "../constants/personaQuestions";
 
 import { AvatarUpload } from "../components/PersonaSetup/AvatarUpload";
 import { PersonalityTraitsInput } from "../components/PersonaSetup/PersonaTraits";
+import { StepNavigationButtons } from "../components/PersonaSetup/NavigationButtons";
 
 export function PersonaSetup() {
   // State management for current step, animation direction and user's persona inputs
@@ -180,28 +179,14 @@ export function PersonaSetup() {
       </div>
 
       {/* Navigation Arrows */}
-      <div className="fixed bottom-8 right-8 flex gap-4">
-        {step > 0 && (
-          <motion.button
-            onClick={handlePrev}
-            className="p-4 rounded-full bg-indigo-500 shadow-lg"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <MdNavigateBefore size={24} fill="white" />
-          </motion.button>
-        )}
-        {step < PERSONA_QUESTIONS.length - 1 && (
-          <motion.button
-            onClick={handleNext}
-            className="p-4 rounded-full bg-indigo-500 shadow-lg"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <MdNavigateNext size={24} fill="white" />
-          </motion.button>
-        )}
-      </div>
+      <StepNavigationButtons
+        step={step}
+        totalSteps={PERSONA_QUESTIONS.length}
+        onNext={handleNext}
+        onPrev={handlePrev}
+        currentQuestionIndex={step}
+        // onCreateBuddy={handleCreateBuddy}
+      />
     </main>
   );
 }

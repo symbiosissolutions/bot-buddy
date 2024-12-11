@@ -33,4 +33,6 @@ export interface INavigationButtonsProps {
   totalSteps: number;
   onNext: () => void;
   onPrev: () => void;
+  currentQuestionIndex: number;
+  onCreateBuddy?: () => void;
 }
