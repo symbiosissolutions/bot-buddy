@@ -4,31 +4,53 @@ import { useState } from "react";
 
 import { slideVariants } from "../utils/animationVariants";
 
-import { IPersonaInputs, IPersonalityTrait } from "../types/PersonaTypes";
+import { IPersonalityTrait } from "../types/PersonaTypes";
 
 import { PERSONA_QUESTIONS } from "../constants/personaQuestions";
 
 import { AvatarUpload } from "../components/PersonaSetup/AvatarUpload";
 import { PersonalityTraitsInput } from "../components/PersonaSetup/PersonaTraits";
 import { StepNavigationButtons } from "../components/PersonaSetup/NavigationButtons";
+import { FormError } from "../components/PersonaSetup/FormError";
+import { TextInput } from "../components/PersonaSetup/TextInput";
+import { TextAreaInput } from "../components/PersonaSetup/TextAreaInput";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { PersonaFormData, personaSchema } from "../schemas/personaSchema";
+
 
 export function PersonaSetup() {
   // State management for current step, animation direction and user's persona inputs
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [touchedFields, setTouchedFields] = useState<Set<number>>(new Set());
 
-  const [inputs, setInputs] = useState<IPersonaInputs>({
-    name: "",
-    tagline: "",
-    greeting: "",
-    backstory: "",
-    avatar: null,
-    personalityTraits: [],
+  const {
+    register,
+    setValue,
+    watch,
+    trigger,
+    formState: { errors },
+  } = useForm<PersonaFormData>({
+    resolver: zodResolver(personaSchema),
+    defaultValues: {
+      name: "",
+      tagline: "",
+      greeting: "",
+      backstory: "",
+      avatar: null,
+      personalityTraits: [],
+    },
   });
 
   // Navigation handlers (move to next/prev step)
-  const handleNext = () => {
-    if (step < PERSONA_QUESTIONS.length - 1) {
+  const handleNext = async () => {
+    setTouchedFields((prev) => new Set(prev).add(step));
+    const currentField = PERSONA_QUESTIONS[step].id;
+    const isValid = await trigger(currentField);
+    if (isValid && step < PERSONA_QUESTIONS.length - 1) {
       setDirection(1);
       setStep(step + 1);
     }
@@ -42,38 +64,48 @@ export function PersonaSetup() {
   };
 
   // Handle key press events
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = async (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && step < PERSONA_QUESTIONS.length - 1) {
-      handleNext();
+      e.preventDefault();
+      await handleNext();
     }
   };
 
   // Generic handler for text and textarea inputs
-  const handleTextInputChange = (value: string) => {
-    const currentQuestion = PERSONA_QUESTIONS[step];
-    setInputs((prev) => ({
-      ...prev,
-      [currentQuestion.id]: value,
-    }));
+  const handleTextInputChange = (
+    value: string,
+    fieldName: keyof PersonaFormData,
+  ) => {
+    setValue(fieldName, value, {
+      shouldValidate: true,
+    });
   };
 
   // Handler for avatar upload
   const handleAvatarChange = (file: File | null) => {
-    setInputs((prev) => ({
-      ...prev,
-      avatar: file,
-    }));
+    setValue("avatar", file, {
+      shouldValidate: true,
+    });
   };
 
   // Handler for personality traits selection
   const handleTraitToggle = (trait: IPersonalityTrait) => {
-    setInputs((prev) => {
-      const currentTraits = prev.personalityTraits;
-      const newTraits = currentTraits.includes(trait)
-        ? currentTraits.filter((t) => t !== trait)
-        : [...currentTraits, trait];
-      return { ...prev, personalityTraits: newTraits };
+    const currentTraits = watch("personalityTraits");
+    const newTraits = currentTraits.includes(trait)
+      ? currentTraits.filter((t) => t !== trait)
+      : [...currentTraits, trait];
+    setValue("personalityTraits", newTraits, {
+      shouldValidate: true,
     });
+  };
+
+  const handleCreateBuddy = async () => {
+    setTouchedFields((prev) => new Set(prev).add(step));
+    const isValid = await trigger(PERSONA_QUESTIONS[step].id);
+    if (isValid) {
+      const formData = watch();
+      console.log("Creating Buddy with data:", formData);
+    }
   };
 
   // Render different input components based on question type
@@ -83,28 +115,30 @@ export function PersonaSetup() {
     switch (currentQuestion.type) {
       case "text":
         return (
-          <input
-            type="text"
-            className="w-full text-5xl bg-transparent border-none outline-none focus:ring-0 text-indigo-600 dark:text-indigo-300 placeholder-indigo-300 dark:placeholder-indigo-600"
-            placeholder={currentQuestion.placeholder}
-            value={inputs[currentQuestion.id] as string}
-            onChange={(e) => handleTextInputChange(e.target.value)}
-            onKeyPress={handleKeyPress}
-            autoFocus
+          <TextInput
+            id={currentQuestion.id as keyof PersonaFormData}
+            register={register}
+            placeholder={currentQuestion.placeholder || ""}
+            handleTextInputChange={handleTextInputChange}
+            handleKeyPress={handleKeyPress}
+            error={errors[
+              currentQuestion.id as keyof PersonaFormData
+            ]?.message?.toString()}
+            showError={touchedFields.has(step)}
           />
         );
 
       case "textarea":
         return (
-          <textarea
-            className="w-full p-4 text-2xl bg-white/10 backdrop-blur-md 
-                       rounded-xl border-2 border-indigo-200 dark:border-indigo-700 
-                       focus:border-indigo-500 outline-none min-h-[200px] 
-                       resize-none text-indigo-600 dark:text-indigo-300"
-            placeholder={currentQuestion.placeholder}
-            value={inputs[currentQuestion.id] as string}
-            onChange={(e) => handleTextInputChange(e.target.value)}
-            autoFocus
+          <TextAreaInput
+            id={currentQuestion.id as keyof PersonaFormData}
+            register={register}
+            placeholder={currentQuestion.placeholder || ""}
+            handleTextInputChange={handleTextInputChange}
+            error={errors[
+              currentQuestion.id as keyof PersonaFormData
+            ]?.message?.toString()}
+            showError={touchedFields.has(step)}
           />
         );
 
@@ -114,8 +148,8 @@ export function PersonaSetup() {
             onAvatarChange={handleAvatarChange}
             // Generate a preview URL for the uploaded avatar file
             currentAvatar={
-              inputs.avatar instanceof File
-                ? URL.createObjectURL(inputs.avatar)
+              watch("avatar") instanceof File
+                ? URL.createObjectURL(watch("avatar"))
                 : null
             }
           />
@@ -123,17 +157,22 @@ export function PersonaSetup() {
 
       case "traits":
         return (
-          <PersonalityTraitsInput
-            selectedTraits={inputs.personalityTraits}
-            onTraitToggle={handleTraitToggle}
-          />
+          <>
+            <PersonalityTraitsInput
+              selectedTraits={watch("personalityTraits") as IPersonalityTrait[]}
+              onTraitToggle={handleTraitToggle}
+            />
+            {errors.personalityTraits && touchedFields.has(step) && (
+              <FormError message={errors.personalityTraits.message || ""} />
+            )}
+          </>
         );
 
       default:
         return null;
     }
   };
-
+  
   return (
     <main className="h-screen flex flex-col bg-gradient-to-br from-indigo-50 to-pink-50 dark:from-indigo-900 dark:to-pink-900 overflow-hidden">
       {/* Progress Bar */}
@@ -164,9 +203,7 @@ export function PersonaSetup() {
                 </h2>
 
                 {/* Dynamic input rendering */}
-                <div className="flex justify-center">
-                  {renderInputComponent()}
-                </div>
+                <div>{renderInputComponent()}</div>
               </motion.div>
             </AnimatePresence>
           </div>
@@ -188,7 +225,7 @@ export function PersonaSetup() {
         onNext={handleNext}
         onPrev={handlePrev}
         currentQuestionIndex={step}
-        // onCreateBuddy={handleCreateBuddy}
+        onCreateBuddy={handleCreateBuddy}
       />
     </main>
   );
