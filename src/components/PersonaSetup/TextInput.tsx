@@ -16,7 +16,7 @@ export const TextInput = ({
       <input
         {...register(id)}
         type="text"
-        className="w-full text-5xl bg-transparent border-none outline-none focus:ring-0 text-indigo-600 dark:text-indigo-300 placeholder-indigo-300 dark:placeholder-indigo-600"
+        className="w-full text-5xl bg-transparent border-none outline-none focus:ring-0 text-indigo-600 placeholder-indigo-300"
         placeholder={placeholder}
         onChange={(e) => handleTextInputChange(e.target.value, id)}
         onKeyDown={handleKeyPress}

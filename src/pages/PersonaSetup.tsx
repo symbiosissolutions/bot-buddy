@@ -174,10 +174,10 @@ export function PersonaSetup() {
   };
   
   return (
-    <main className="h-screen flex flex-col bg-gradient-to-br from-indigo-50 to-pink-50 dark:from-indigo-900 dark:to-pink-900 overflow-hidden">
+    <main className="h-screen flex flex-col bg-gradient-to-br from-indigo-50 to-pink-50 overflow-hidden">
       {/* Progress Bar */}
       <motion.div
-        className="h-1 bg-indigo-400 dark:bg-indigo-700 rounded-full"
+        className="h-1 bg-indigo-400 rounded-full"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: (step + 1) / PERSONA_QUESTIONS.length }}
         transition={{ duration: 0.5 }}
@@ -198,7 +198,7 @@ export function PersonaSetup() {
                 className="w-full"
               >
                 {/* Dynamic question display */}
-                <h2 className="text-4xl font-bold mb-8 text-indigo-900 dark:text-indigo-100">
+                <h2 className="text-4xl font-bold mb-8 text-indigo-900">
                   {PERSONA_QUESTIONS[step].question}
                 </h2>
 
