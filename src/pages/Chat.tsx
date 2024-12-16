@@ -5,7 +5,7 @@ import { claudeClient } from "../claude/threads";
 import { v4 as uuidv4 } from "uuid";
 
 import { API_KEY } from "../constants/config";
-import { ROLES, ROLE_LABELS } from "../constants/enums";
+import { ROLES, getRoleLabel } from "../constants/enums";
 import { DISCLAIMER_TEXT, INTRODUCTION_TEXT } from "../constants/content";
 
 import { TypingIndicator } from "../components/TypingIndicator";
@@ -14,6 +14,8 @@ import appBackground from "../assets/ask-buddha-bg-min.jpg";
 
 import "../Chat.css";
 
+import { useLocation, useNavigate } from "react-router-dom";
+
 type TMessage = {
   id: string;
   role: `${ROLES}`;
@@ -21,21 +23,51 @@ type TMessage = {
 };
 const assistant = claudeClient(API_KEY);
 
-const Chat = () =>{
+const Chat = () => {
   const [threadId, setThreadId] = useState<string | undefined>();
   const [messages, setMessages] = useState<TMessage[]>([]);
   const [appInitializing, setAppInitializing] = useState(true);
-  const [loadingAssistantResponse, setLoadingAssistantResponse] = useState(false);
+  const [loadingAssistantResponse, setLoadingAssistantResponse] =
+    useState(false);
   const [userInput, setUserInput] = useState("");
   const chatboxRef = useRef<HTMLDivElement>(null);
+
+  const { state } = useLocation();
+  // Destructure state with default values
+  const { buddyPrompt = "", buddyData = {} } = state || {};
+
+  const navigate = useNavigate();
+
+  // Redirect if no state exists
+  useEffect(() => {
+    if (!state) {
+      navigate("/");
+      return;
+    }
+  }, [state, navigate]);
 
   const init = async () => {
     setAppInitializing(true);
     const thread = await assistant.createThread();
+
+    if (buddyPrompt) {
+      await assistant.createMessageInThread(thread.id, buddyPrompt);
+    }
+
     setThreadId(thread.id);
     setAppInitializing(false);
-  };
 
+    // Add initial greeting using buddy data
+    if (buddyData.greeting) {
+      setMessages([
+        {
+          id: uuidv4(),
+          role: "assistant",
+          content: buddyData.greeting,
+        },
+      ]);
+    }
+  };
   useEffect(() => {
     init();
   }, []);
@@ -125,7 +157,11 @@ const Chat = () =>{
                   <div className="message-author">
                     <div className="message-author-avatar"></div>
                     <h4 className="message-author-role">
-                      {ROLE_LABELS[message.role]}
+                      {
+                        getRoleLabel(message.role as ROLES, buddyData.name)[
+                          message.role
+                        ]
+                      }
                     </h4>
                   </div>
                   <p className="message-content">{message.content}</p>
@@ -168,6 +204,6 @@ const Chat = () =>{
       </div>
     </>
   );
-}
+};
 
 export default Chat;

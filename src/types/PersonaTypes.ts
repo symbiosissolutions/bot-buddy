@@ -14,6 +14,7 @@ export interface IPersonaInputs {
   name: string;
   tagline: string;
   greeting: string;
+  purpose: string;
   backstory: string;
   avatar: File | string | null;
   personalityTraits: IPersonalityTrait[];

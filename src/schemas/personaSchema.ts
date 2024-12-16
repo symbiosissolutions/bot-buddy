@@ -19,8 +19,8 @@ export const personaSchema = z.object({
     .nonempty("Every character needs a tagline. Add one to bring them to life!")
     .min(10, "Your tagline needs at least 10 characters. Try to make it fun!")
     .max(
-      50,
-      "Your tagline is getting a bit long! Try to keep it under 50 characters.",
+      150,
+      "Your tagline is getting a bit long! Try to keep it under 150 characters.",
     ),
 
   greeting: z
@@ -28,8 +28,19 @@ export const personaSchema = z.object({
     .nonempty("Please enter a greeting! It’s your chance to say hello!")
     .min(5, "Your greeting needs at least 5 characters. Say something nice!")
     .max(
-      100,
-      "Your greeting is a bit long. How about keeping it under 100 characters?",
+      150,
+      "Your greeting is a bit long. How about keeping it under 150 characters?",
+    ),
+
+  purpose: z
+    .string()
+    .nonempty(
+      "Every character needs a purpose. What do you want to achieve with your character?",
+    )
+    .min(10, "Your purpose needs at least 10 characters. Tell us a bit more!")
+    .max(
+      200,
+      "Your purpose is getting a bit long. How about keeping it under 200 characters?",
     ),
 
   backstory: z
@@ -40,8 +51,8 @@ export const personaSchema = z.object({
       "Your backstory should be at least 20 characters. Tell us a bit more!",
     )
     .max(
-      400,
-      "Your backstory is getting long. Let's keep it under 400 characters!",
+      800,
+      "Your backstory is getting long. Let's keep it under 800 characters!",
     ),
 
   avatar: z.any().optional(),

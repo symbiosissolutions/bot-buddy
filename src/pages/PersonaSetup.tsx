@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
 import { slideVariants } from "../utils/animationVariants";
+import { generateBuddyPrompt } from "../utils/promptGenerator";
 
-import { IPersonalityTrait } from "../types/PersonaTypes";
+import { IPersonaInputs, IPersonalityTrait } from "../types/PersonaTypes";
 
 import { PERSONA_QUESTIONS } from "../constants/personaQuestions";
 
@@ -20,12 +21,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { PersonaFormData, personaSchema } from "../schemas/personaSchema";
 
+import { useNavigate } from "react-router-dom";
 
 export function PersonaSetup() {
   // State management for current step, animation direction and user's persona inputs
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(0);
   const [touchedFields, setTouchedFields] = useState<Set<number>>(new Set());
+  const navigate = useNavigate();
 
   const {
     register,
@@ -104,7 +107,15 @@ export function PersonaSetup() {
     const isValid = await trigger(PERSONA_QUESTIONS[step].id);
     if (isValid) {
       const formData = watch();
-      console.log("Creating Buddy with data:", formData);
+
+      const buddyPrompt = generateBuddyPrompt(formData as IPersonaInputs);
+      // Navigate to chat
+      navigate("/chat", {
+        state: {
+          buddyPrompt,
+          buddyData: formData,
+        },
+      });
     }
   };
 
@@ -172,7 +183,7 @@ export function PersonaSetup() {
         return null;
     }
   };
-  
+
   return (
     <main className="h-screen flex flex-col bg-gradient-to-br from-indigo-50 to-pink-50 overflow-hidden">
       {/* Progress Bar */}

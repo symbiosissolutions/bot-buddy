@@ -3,7 +3,7 @@ export enum ROLES {
   assistant = "assistant",
 }
 
-export enum ROLE_LABELS {
-  user = "You",
-  assistant = "Buddha AI",
-}
+export const getRoleLabel = (_role: ROLES, characterName?: string) => ({
+  [ROLES.user]: "You",
+  [ROLES.assistant]: `${characterName} AI` || "AI Assistant"
+});
