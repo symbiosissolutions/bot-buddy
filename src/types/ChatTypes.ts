@@ -8,6 +8,7 @@ export interface IMessage {
   id: string;
   role: `${ROLES}`;
   content: string;
+  format?: "markdown" | "text";
 }
 
 export interface IChatMessagesProps {

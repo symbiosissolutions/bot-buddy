@@ -122,6 +122,7 @@ const Chat = () => {
         id: uuidv4(),
         content: assistantResponse as string,
         role: "assistant",
+        format: "markdown",
       },
     ]);
     setLoadingAssistantResponse(false);

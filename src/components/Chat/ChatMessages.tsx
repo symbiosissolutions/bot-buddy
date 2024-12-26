@@ -8,13 +8,13 @@ import lotusImage from "../../assets/lotus.png";
 import userImage from "../../assets/user.png";
 
 import { useMemo } from "react";
+import Markdown from "react-markdown";
 
 export const ChatMessages = ({
   messages,
   loadingAssistantResponse,
   buddyData,
 }: IChatMessagesProps) => {
-
   // Use useMemo to memoize the buddyAvatarUrl value
   const buddyAvatarUrl = useMemo(() => {
     if (buddyData?.avatar instanceof File) {
@@ -37,13 +37,11 @@ export const ChatMessages = ({
         {messages.map((message) => (
           <div
             key={message.id}
-            
             className={`px-6 py-3 rounded-[20px] max-w-[70%] shadow-sm transition-all duration-200  ${
               message.role === "assistant"
                 ? "bg-gradient-to-br from-indigo-100 to-purple-100 self-start"
                 : "bg-gradient-to-br from-sky-100 to-indigo-200 self-end ml-auto"
-
-              }`}
+            }`}
           >
             <div className="flex items-center">
               <div
@@ -58,7 +56,13 @@ export const ChatMessages = ({
                 }
               </h4>
             </div>
-            <p className="mt-2 text-sm leading-relaxed">{message.content}</p>
+            <p className="mt-2 text-sm leading-relaxed">
+              {message.format === "markdown" ? (
+                <Markdown>{message.content}</Markdown>
+              ) : (
+                message.content
+              )}
+            </p>
           </div>
         ))}
         {loadingAssistantResponse && (
