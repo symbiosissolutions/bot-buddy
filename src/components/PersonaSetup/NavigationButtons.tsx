@@ -6,14 +6,14 @@ import { INavigationButtonsProps } from "../../types/PersonaTypes";
 
 import { RiRobot3Line } from "react-icons/ri";
 
-export const StepNavigationButtons: React.FC<INavigationButtonsProps> = ({
+export const StepNavigationButtons = ({
   step,
   totalSteps,
   onNext,
   onPrev,
   currentQuestionIndex,
   onCreateBuddy,
-}) => {
+}: INavigationButtonsProps) => {
   const isLastStep = currentQuestionIndex === totalSteps - 1;
   return (
     <div className="fixed bottom-8 right-8 flex gap-4">

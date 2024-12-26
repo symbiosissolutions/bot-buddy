@@ -47,7 +47,7 @@ p {
   height: auto;
   margin-top: 5px;
   text-align: center;
-  background-color: #e2ffdaaa;
+  background-color: #f4f4f5;
   padding: 8px 0;
 }
 
@@ -75,7 +75,7 @@ p {
 }
 
 .about-section {
-  background-color: #fefdea;
+  background-color: #fefffe;
   padding: 30px 15px;
   flex: 1;
   max-width: 350px;
@@ -91,9 +91,9 @@ p {
 
 .chatbox {
   flex: 1;
-  background-color: #fefdea;
+  background-color: #fefffe;
   margin-bottom: 15px;
-  max-width: 350px;
+  /* max-width: 59%; */
   align-self: flex-end;
   width: 100%;
   padding: 0 15px;
@@ -107,7 +107,7 @@ p {
 }
 
 .custom-scroll::-webkit-scrollbar-track {
-  background: #fefdea; /* Light grey track */
+  background: #fefffe; /* Light grey track */
   border-radius: 10px; /* Match the border-radius of the div */
   margin: 8px 0; /* Adds top and bottom padding */
 }
@@ -167,7 +167,7 @@ p {
 #chat-form input {
   margin-right: 15px;
   flex: 1;
-  background-color: #fefdea;
+  background-color: #fefffe;
   border-radius: 17px;
   border: none;
   padding: 0 15px;
@@ -190,7 +190,7 @@ p {
 #chat-form .submit-chat,
 #chat-form .clear-chat {
   width: 60px;
-  background-color: #fefdea;
+  background-color: #fefffe;
   border-radius: 17px;
   border: none;
   text-align: center;

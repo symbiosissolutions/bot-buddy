@@ -7,10 +7,10 @@ interface PersonaTraitsInputProps {
   onTraitToggle: (trait: IPersonalityTrait) => void;
 }
 
-export const PersonalityTraitsInput: React.FC<PersonaTraitsInputProps> = ({
+export const PersonalityTraitsInput = ({
   selectedTraits,
   onTraitToggle,
-}) => {
+}: PersonaTraitsInputProps) => {
   const allTraits: IPersonalityTrait[] = [
     "Funny",
     "Sarcastic",

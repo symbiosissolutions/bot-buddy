@@ -1,31 +1,26 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { claudeClient } from "../claude/threads";
 
 import { v4 as uuidv4 } from "uuid";
 
 import { API_KEY } from "../constants/config";
-import { ROLES, getRoleLabel } from "../constants/enums";
-import { DISCLAIMER_TEXT, INTRODUCTION_TEXT } from "../constants/content";
 
-import { TypingIndicator } from "../components/TypingIndicator";
-
-import appBackground from "../assets/ask-buddha-bg-min.jpg";
+import appBackground from "../assets/bot-buddy-bg-main.jpg";
 
 import "../Chat.css";
 
-import { useLocation, useNavigate } from "react-router-dom";
+import { ChatInput } from "../components/Chat/ChatInput";
+import { ChatMessages } from "../components/Chat/ChatMessages";
+import { ChatLayout } from "../components/Chat/ChatLayout";
+import { IMessage } from "../types/ChatTypes";
 
-type TMessage = {
-  id: string;
-  role: `${ROLES}`;
-  content: string;
-};
 const assistant = claudeClient(API_KEY);
 
 const Chat = () => {
   const [threadId, setThreadId] = useState<string | undefined>();
-  const [messages, setMessages] = useState<TMessage[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
   const [appInitializing, setAppInitializing] = useState(true);
   const [loadingAssistantResponse, setLoadingAssistantResponse] =
     useState(false);
@@ -35,7 +30,6 @@ const Chat = () => {
   const { state } = useLocation();
   // Destructure state with default values
   const { buddyPrompt = "", buddyData = {} } = state || {};
-
   const navigate = useNavigate();
 
   // Redirect if no state exists
@@ -133,77 +127,36 @@ const Chat = () => {
     setLoadingAssistantResponse(false);
   };
 
-  const clearChat = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleClearChat = async () => {
     setMessages([]);
     await init();
   };
 
   return (
     <>
-      {appInitializing ? <div className="loader"></div> : <></>}
+      {appInitializing ? <div className="loader"></div> : null}
       <div
         className={`screen ${appInitializing ? "loading" : ""}`}
         style={{ backgroundImage: `url(${appBackground})` }}
       >
-        <div className="screen-main">
-          <div className="chat-section">
-            <div className="chatbox curved custom-scroll" ref={chatboxRef}>
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`message curved ${message.role}`}
-                >
-                  <div className="message-author">
-                    <div className="message-author-avatar"></div>
-                    <h4 className="message-author-role">
-                      {
-                        getRoleLabel(message.role as ROLES, buddyData.name)[
-                          message.role
-                        ]
-                      }
-                    </h4>
-                  </div>
-                  <p className="message-content">{message.content}</p>
-                </div>
-              ))}
-              {loadingAssistantResponse && (
-                <div className={`message curved assistant`}>
-                  <TypingIndicator />
-                </div>
-              )}
-            </div>
-            <form id="chat-form" onSubmit={handleSubmit} className="curved">
-              <input
-                type="text"
-                value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
-                disabled={loadingAssistantResponse}
-                placeholder="What would you like to ask Buddha today?"
-              />
-              <button
-                type="submit"
-                className="submit-chat"
-                disabled={loadingAssistantResponse}
-              ></button>
-              <button
-                type="button"
-                className="clear-chat"
-                onClick={clearChat}
-              ></button>
-            </form>
+        <ChatLayout buddyData={buddyData}>
+          <div className="chatbox curved custom-scroll" ref={chatboxRef}>
+            <ChatMessages
+              messages={messages}
+              loadingAssistantResponse={loadingAssistantResponse}
+              buddyData={buddyData}
+            />
           </div>
-          <div className="about-section curved custom-scroll">
-            <h1>About Me</h1>
-            <div dangerouslySetInnerHTML={{ __html: INTRODUCTION_TEXT }}></div>
-          </div>
-        </div>
-        <div className="screen-disclaimer">
-          <p>{DISCLAIMER_TEXT}</p>
-        </div>
+          <ChatInput
+            userInput={userInput}
+            onInputChange={setUserInput}
+            onSubmit={handleSubmit}
+            onClear={handleClearChat}
+            isLoading={loadingAssistantResponse}
+          />
+        </ChatLayout>
       </div>
     </>
   );
 };
-
 export default Chat;

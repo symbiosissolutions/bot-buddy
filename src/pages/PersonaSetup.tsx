@@ -16,6 +16,8 @@ import { FormError } from "../components/PersonaSetup/FormError";
 import { TextInput } from "../components/PersonaSetup/TextInput";
 import { TextAreaInput } from "../components/PersonaSetup/TextAreaInput";
 
+import Logo from "../assets/botbuddy-logo.png";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -193,6 +195,10 @@ export function PersonaSetup() {
         animate={{ scaleX: (step + 1) / PERSONA_QUESTIONS.length }}
         transition={{ duration: 0.5 }}
       />
+
+      <div className="w-full max-w-6xl mx-auto px-4 pt-8">
+        <img src={Logo} alt="Bot Buddy Logo" className="w-40" />
+      </div>
 
       <div className="w-full max-w-6xl mx-auto px-4 py-8 flex-1 flex">
         <div className="w-2/3 pr-8 flex items-center">

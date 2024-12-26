@@ -10,10 +10,10 @@ interface AvatarUploadProps {
   currentAvatar?: string | null;
 }
 
-export const AvatarUpload: React.FC<AvatarUploadProps> = ({
+export const AvatarUpload = ({
   onAvatarChange,
   currentAvatar,
-}) => {
+}: AvatarUploadProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(
     currentAvatar || null,
