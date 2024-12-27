@@ -43,6 +43,7 @@ export function PersonaSetup() {
     defaultValues: {
       name: "",
       tagline: "",
+      purpose: "",
       greeting: "",
       backstory: "",
       avatar: null,

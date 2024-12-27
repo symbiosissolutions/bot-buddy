@@ -15,6 +15,7 @@ import { ChatInput } from "../components/Chat/ChatInput";
 import { ChatMessages } from "../components/Chat/ChatMessages";
 import { ChatLayout } from "../components/Chat/ChatLayout";
 import { IMessage } from "../types/ChatTypes";
+import { IoArrowBack } from "react-icons/io5";
 
 const assistant = claudeClient(API_KEY);
 
@@ -140,6 +141,16 @@ const Chat = () => {
         className={`screen ${appInitializing ? "loading" : ""}`}
         style={{ backgroundImage: `url(${appBackground})` }}
       >
+        <div className="w-full p-4">
+          <button
+            onClick={() => navigate("/edit", { state: { buddyData } })}
+            className="flex items-center gap-1 px-4 py-2 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0.5"
+          >
+            <IoArrowBack size={20} />
+            <span>Edit Buddy</span>
+          </button>
+        </div>
+
         <ChatLayout buddyData={buddyData}>
           <div className="chatbox curved custom-scroll" ref={chatboxRef}>
             <ChatMessages

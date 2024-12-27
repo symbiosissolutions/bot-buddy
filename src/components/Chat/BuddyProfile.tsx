@@ -1,5 +1,7 @@
 import { IPersonaInputs } from "../../types/PersonaTypes";
 
+import buddyImage from "../../assets/botbuddy-logo-main.png";
+
 interface IBuddyProfileProps {
   buddyData: IPersonaInputs;
 }
@@ -13,7 +15,7 @@ const BuddyProfile = ({ buddyData }: IBuddyProfileProps) => {
             src={
               buddyData.avatar
                 ? URL.createObjectURL(buddyData.avatar as File)
-                : "../../assets/lotus.png"
+                : buddyImage
             }
             className="w-full h-full object-cover"
             alt={`${buddyData.name}'s avatar`}

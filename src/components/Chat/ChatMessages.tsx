@@ -4,7 +4,7 @@ import { getRoleLabel, ROLES } from "../../constants/enums";
 
 import { TypingIndicator } from "../TypingIndicator";
 
-import lotusImage from "../../assets/lotus.png";
+import buddyImage from "../../assets/botbuddy-logo-main.png";
 import userImage from "../../assets/user.png";
 
 import { useMemo } from "react";
@@ -20,7 +20,7 @@ export const ChatMessages = ({
     if (buddyData?.avatar instanceof File) {
       return URL.createObjectURL(buddyData.avatar);
     }
-    return lotusImage;
+    return buddyImage;
   }, [buddyData?.avatar]);
 
   // Get the avatar style based on the role
@@ -56,13 +56,13 @@ export const ChatMessages = ({
                 }
               </h4>
             </div>
-            <p className="mt-2 text-sm leading-relaxed">
+            <div className="mt-2 text-sm leading-relaxed">
               {message.format === "markdown" ? (
                 <Markdown>{message.content}</Markdown>
               ) : (
                 message.content
               )}
-            </p>
+            </div>
           </div>
         ))}
         {loadingAssistantResponse && (
