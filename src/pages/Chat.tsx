@@ -16,7 +16,7 @@ import { IMessage } from "../types/ChatTypes";
 import { IoArrowBack } from "react-icons/io5";
 
 export const chatService = {
-  sendMessage: async (message: string, buddyData: any, messages: IMessage[]) => {
+  sendMessage: async (_message: string, buddyData: any, messages: IMessage[]) => {
     const payload = {
       buddy: {
         buddy_tag: buddyData.buddy_tag,
@@ -57,7 +57,7 @@ const Chat = () => {
 
   const { state } = useLocation();
   // Destructure state with default values
-  const { buddyPrompt = "", buddyData = {} } = state || {};
+  const { buddyData = {} } = state || {};
   const navigate = useNavigate();
 
   // Redirect if no state exists
@@ -92,6 +92,7 @@ const Chat = () => {
       chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
     }
   }, [messages]);
+
 
 
   const sendMessageAndGetResponse = async (message: string, currentMessages: IMessage[]) => {
