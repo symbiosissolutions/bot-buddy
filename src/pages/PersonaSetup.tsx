@@ -25,11 +25,14 @@ import { PersonaFormData, personaSchema } from "../schemas/personaSchema";
 
 import { useNavigate } from "react-router-dom";
 
+import { SECRET_KEY, BASE_URL } from "../constants/config";
+
 export function PersonaSetup() {
   // State management for current step, animation direction and user's persona inputs
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(0);
   const [touchedFields, setTouchedFields] = useState<Set<number>>(new Set());
+  const [isCreatingBuddy, setIsCreatingBuddy] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -106,19 +109,65 @@ export function PersonaSetup() {
   };
 
   const handleCreateBuddy = async () => {
+    if (isCreatingBuddy) return;
+
+    setIsCreatingBuddy(true);
+
     setTouchedFields((prev) => new Set(prev).add(step));
     const isValid = await trigger(PERSONA_QUESTIONS[step].id);
-    if (isValid) {
-      const formData = watch();
 
-      const buddyPrompt = generateBuddyPrompt(formData as IPersonaInputs);
-      // Navigate to chat
-      navigate("/chat", {
-        state: {
-          buddyPrompt,
-          buddyData: formData,
+    if (!isValid) {
+      setIsCreatingBuddy(false);
+      return;
+    }
+
+    const formValues = watch();
+
+    // Create FormData object
+    const formData = new FormData();
+    formData.append("name", formValues.name);
+    formData.append("tagline", formValues.tagline);
+    formData.append("greeting", formValues.greeting);
+    formData.append("purpose", formValues.purpose);
+    formData.append("backstory", formValues.backstory);
+
+    formData.append(
+      "personality_traits",
+      formValues.personalityTraits.map((trait) => trait).join(","),
+    );
+
+    if (formValues.avatar) {
+      formData.append("avatar", formValues.avatar);
+    }
+
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/v1/buddies/create`,
+        {
+          method: "POST",
+          headers: {
+            "secret-key": SECRET_KEY,
+          },
+          body: formData,
         },
-      });
+      );
+
+      if (response.ok) {
+        const buddyData = await response.json();
+        const buddyPrompt = generateBuddyPrompt(formValues as IPersonaInputs);
+        navigate("/chat", {
+          state: {
+            buddyPrompt,
+            buddyData: buddyData,
+          },
+        });
+      } else {
+        console.error("Server error:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error creating buddy:", error);
+    } finally {
+      setIsCreatingBuddy(false);
     }
   };
 
@@ -244,6 +293,7 @@ export function PersonaSetup() {
         onPrev={handlePrev}
         currentQuestionIndex={step}
         onCreateBuddy={handleCreateBuddy}
+        isCreatingBuddy={isCreatingBuddy}
       />
     </main>
   );

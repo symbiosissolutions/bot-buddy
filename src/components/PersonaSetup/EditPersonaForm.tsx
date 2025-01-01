@@ -14,9 +14,12 @@ import { AvatarUpload } from "./AvatarUpload";
 export const EditPersonaForm = ({
   buddyData,
   onSave,
+  isSaving,
 }: {
-  buddyData: PersonaFormData;
+  // buddyData: PersonaFormData;
+  buddyData: any;
   onSave: (data: PersonaFormData) => void;
+  isSaving: boolean;
 }) => {
   const {
     register,
@@ -26,7 +29,12 @@ export const EditPersonaForm = ({
     formState: { errors },
   } = useForm<PersonaFormData>({
     resolver: zodResolver(personaSchema),
-    defaultValues: buddyData,
+    defaultValues: {
+      ...buddyData,
+      personalityTraits: Array.isArray(buddyData.personality_traits)
+        ? buddyData.personality_traits
+        : JSON.parse(buddyData.personality_traits || "[]"),
+    },
   });
 
   const handleTextInputChange = (
@@ -43,7 +51,7 @@ export const EditPersonaForm = ({
   };
 
   const handleTraitToggle = (trait: IPersonalityTrait) => {
-    const currentTraits = watch("personalityTraits");
+    const currentTraits = watch("personalityTraits") || [];
     const newTraits = currentTraits.includes(trait)
       ? currentTraits.filter((t) => t !== trait)
       : [...currentTraits, trait];
@@ -142,7 +150,13 @@ export const EditPersonaForm = ({
           Personality Traits
         </label>
         <PersonalityTraitsInput
-          selectedTraits={watch("personalityTraits") as IPersonalityTrait[]}
+          selectedTraits={
+            Array.isArray(watch("personalityTraits"))
+              ? watch("personalityTraits")
+              : Array.isArray(buddyData.personality_traits)
+                ? buddyData.personality_traits
+                : JSON.parse(buddyData.personality_traits || "[]")
+          }
           onTraitToggle={handleTraitToggle}
         />
         {errors.personalityTraits && (
@@ -152,9 +166,14 @@ export const EditPersonaForm = ({
 
       <button
         type="submit"
-        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors"
+        disabled={isSaving}
+        className={`w-full py-3 ${
+          isSaving
+            ? "bg-indigo-300 cursor-not-allowed"
+            : "bg-indigo-500 hover:bg-indigo-600"
+        } text-white rounded-lg transition-colors`}
       >
-        Save Changes
+        {isSaving ? "Saving Changes..." : "Save Changes"}
       </button>
     </form>
   );

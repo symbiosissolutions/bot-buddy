@@ -13,6 +13,7 @@ export const StepNavigationButtons = ({
   onPrev,
   currentQuestionIndex,
   onCreateBuddy,
+  isCreatingBuddy,
 }: INavigationButtonsProps) => {
   const isLastStep = currentQuestionIndex === totalSteps - 1;
   return (
@@ -45,12 +46,17 @@ export const StepNavigationButtons = ({
       {isLastStep && (
         <motion.button
           onClick={onCreateBuddy}
-          className="px-6 py-4 rounded-full bg-indigo-500 shadow-lg flex items-center gap-2 text-white font-medium"
+          disabled={isCreatingBuddy}
+          className={`px-6 py-4 rounded-full shadow-lg flex items-center gap-2 text-white font-medium ${
+            isCreatingBuddy
+              ? "bg-indigo-300 cursor-not-allowed"
+              : "bg-indigo-500"
+          }`}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
           <RiRobot3Line size={24} fill="white" />
-          Create Buddy
+          {isCreatingBuddy ? 'Creating...' : 'Create Buddy'}
         </motion.button>
       )}
     </div>

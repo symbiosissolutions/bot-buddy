@@ -17,8 +17,8 @@ export const ChatMessages = ({
 }: IChatMessagesProps) => {
   // Use useMemo to memoize the buddyAvatarUrl value
   const buddyAvatarUrl = useMemo(() => {
-    if (buddyData?.avatar instanceof File) {
-      return URL.createObjectURL(buddyData.avatar);
+    if (typeof buddyData?.avatar === "string") {
+      return buddyData.avatar;
     }
     return buddyImage;
   }, [buddyData?.avatar]);

@@ -36,4 +36,5 @@ export interface INavigationButtonsProps {
   onPrev: () => void;
   currentQuestionIndex: number;
   onCreateBuddy?: () => void;
+  isCreatingBuddy?: boolean;
 }
