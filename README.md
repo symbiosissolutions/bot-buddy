@@ -1,8 +1,10 @@
-# Ask Buddha
+# Bot Buddy
 
 ## Overview
 
-This React application simulates a conversation with Lord Buddha, providing users with historical and educational information in an engaging format. The chatbot is powered by OpenAI's API, allowing it to generate informative and contextually appropriate responses. To learn more about interacting with the APIs, check out [this doc](./docs/using-the-openai-assistant-apis.md).
+Bot Buddy is an interactive web application that lets users create and chat with customized AI characters. It provides a platform for educational and entertaining role-play interactions with AI personas. 
+
+Users can design their own characters by defining traits, backstories, and personalities, then engage in dynamic conversations with their created buddies.
 
 ## Technologies Used
 
@@ -10,6 +12,8 @@ This React application simulates a conversation with Lord Buddha, providing user
 - **Vite**: A modern frontend build tool that significantly improves the development experience.
 - **TypeScript**: A typed superset of JavaScript that compiles to plain JavaScript.
 - **SWC**: A super-fast compiler that powers the transformation of TypeScript into JavaScript.
+- **Framer Motion**: Animation library for smooth UI transitions
+- **Zod**: Schema validation for form inputs
 
 ## Setup
 
@@ -25,8 +29,8 @@ To get this project up and running on your local machine, follow these steps:
 1. **Clone the repository**
 
 ```bash
-git clone git@github.com:symbiosissolutions/ask-buddha.git
-cd ask-buddha
+git clone https://github.com/symbiosissolutions/bot-buddy.git
+cd bot-buddy
 ```
 
 2. **Install dependencies**
@@ -42,8 +46,8 @@ yarn install
 Create a `.env` file in the root of the project and add your OpenAI API key:
 
 ```plaintext
-VITE_OPENAI_API_KEY=your_openai_api_key_here
-VITE_OPENAI_ASSISTANT_ID=your_assistant_id_here
+VITE_SECRET_KEY=your_secret_key_here
+VITE_BASE_URL=your_base_url_here
 ```
 
 ### Running the Application
@@ -67,7 +71,3 @@ npm run build
 # or
 yarn build
 ```
-
-## Usage
-
-Once the app is running, you can interact with the chatbot by typing your questions into the chat interface. The bot, assuming the persona of Lord Buddha, will respond with information that is both educational and insightful.
