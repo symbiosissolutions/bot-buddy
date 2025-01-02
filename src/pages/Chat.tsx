@@ -12,11 +12,18 @@ import "../Chat.css";
 import { ChatInput } from "../components/Chat/ChatInput";
 import { ChatMessages } from "../components/Chat/ChatMessages";
 import { ChatLayout } from "../components/Chat/ChatLayout";
+
 import { IMessage } from "../types/ChatTypes";
+
 import { IoArrowBack } from "react-icons/io5";
+import { FaUserEdit } from "react-icons/fa";
 
 export const chatService = {
-  sendMessage: async (_message: string, buddyData: any, messages: IMessage[]) => {
+  sendMessage: async (
+    _message: string,
+    buddyData: any,
+    messages: IMessage[],
+  ) => {
     const payload = {
       buddy: {
         buddy_tag: buddyData.buddy_tag,
@@ -25,26 +32,26 @@ export const chatService = {
         greeting: buddyData.greeting,
         purpose: buddyData.purpose,
         backstory: buddyData.backstory,
-        personality_traits: buddyData.personality_traits || buddyData.personalityTraits
+        personality_traits:
+          buddyData.personality_traits || buddyData.personalityTraits,
       },
-       messages: messages.map(msg => ({
+      messages: messages.map((msg) => ({
         role: msg.role,
-        content: msg.content
-      }))
+        content: msg.content,
+      })),
     };
 
     const response = await fetch(`${BASE_URL}/api/v1/chat_completion`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         "secret-key": SECRET_KEY,
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
     return response.json();
-  }
+  },
 };
-
 
 const Chat = () => {
   // const [threadId, setThreadId] = useState<string | undefined>();
@@ -93,16 +100,21 @@ const Chat = () => {
     }
   }, [messages]);
 
-
-
-  const sendMessageAndGetResponse = async (message: string, currentMessages: IMessage[]) => {
-    const completion = await chatService.sendMessage(message, buddyData, currentMessages);
+  const sendMessageAndGetResponse = async (
+    message: string,
+    currentMessages: IMessage[],
+  ) => {
+    const completion = await chatService.sendMessage(
+      message,
+      buddyData,
+      currentMessages,
+    );
     return completion.response;
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     // Create new message
     const newUserMessage: IMessage = {
       id: uuidv4(),
@@ -117,8 +129,11 @@ const Chat = () => {
     setLoadingAssistantResponse(true);
 
     // Use updated messages array for API call
-    const assistantResponse = await sendMessageAndGetResponse(userInput, updatedMessages);
-    
+    const assistantResponse = await sendMessageAndGetResponse(
+      userInput,
+      updatedMessages,
+    );
+
     setMessages((currentMessages) => [
       ...currentMessages,
       {
@@ -129,7 +144,7 @@ const Chat = () => {
       },
     ]);
     setLoadingAssistantResponse(false);
-};
+  };
   const handleClearChat = async () => {
     setMessages([]);
     await init();
@@ -142,12 +157,19 @@ const Chat = () => {
         className={`screen ${appInitializing ? "loading" : ""}`}
         style={{ backgroundImage: `url(${appBackground})` }}
       >
-        <div className="w-full p-4">
+        <div className="w-full p-4 flex gap-2">
+          <button
+            onClick={() => navigate("/")}
+            className="flex items-center gap-1 px-4 py-2 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0.5"
+          >
+            <IoArrowBack size={20} />
+            <span>Back</span>
+          </button>
           <button
             onClick={() => navigate("/edit", { state: { buddyData } })}
             className="flex items-center gap-1 px-4 py-2 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0.5"
           >
-            <IoArrowBack size={20} />
+            <FaUserEdit size={20} />
             <span>Edit Buddy</span>
           </button>
         </div>

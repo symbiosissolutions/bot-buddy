@@ -12,7 +12,11 @@ const BuddyProfile = ({ buddyData }: IBuddyProfileProps) => {
       <div className="flex flex-col items-center text-center">
         <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-indigo-400 shadow-xl mb-6 hover:scale-105 transition-transform duration-300">
           <img
-            src={typeof buddyData.avatar === 'string' ? buddyData.avatar : buddyImage}
+            src={
+              typeof buddyData.avatar === "string"
+                ? buddyData.avatar
+                : buddyImage
+            }
             className="w-full h-full object-cover"
             alt={`${buddyData.name}'s avatar`}
           />
@@ -31,4 +35,5 @@ const BuddyProfile = ({ buddyData }: IBuddyProfileProps) => {
       </div>
     </div>
   );
-};export default BuddyProfile;
+};
+export default BuddyProfile;
