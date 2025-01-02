@@ -1,9 +1,9 @@
-import { IPersonaInputs } from "../../types/PersonaTypes";
+// import { IPersonaInputs } from "../../types/PersonaTypes";
 
 import buddyImage from "../../assets/botbuddy-logo-main.png";
 
 interface IBuddyProfileProps {
-  buddyData: IPersonaInputs;
+  buddyData: any;
 }
 
 const BuddyProfile = ({ buddyData }: IBuddyProfileProps) => {
@@ -23,6 +23,9 @@ const BuddyProfile = ({ buddyData }: IBuddyProfileProps) => {
           </h2>
           <p className="text-lg text-indigo-600 font-medium italic line-clamp-6">
             {buddyData.tagline}
+          </p>
+          <p className="text-base text-indigo-700 font-medium italic line-clamp-6">
+            Buddy Tag: {buddyData.buddy_tag}
           </p>
         </div>
       </div>
