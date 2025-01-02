@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 import { BiSolidSend, BiSolidTrashAlt } from "react-icons/bi";
 
 import { IChatInputProps } from "../../types/ChatTypes";
@@ -9,12 +11,24 @@ export const ChatInput = ({
   onClear,
   isLoading,
 }: IChatInputProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [isLoading]);
+
+  const handleClear = () => {
+    onClear();
+    inputRef.current?.focus();
+  };
+
   return (
     <form
       onSubmit={onSubmit}
       className="flex gap-3 p-4 bg-white/90 rounded-xl shadow-lg"
     >
       <input
+        ref={inputRef}
         type="text"
         value={userInput}
         onChange={(e) => onInputChange(e.target.value)}
@@ -33,7 +47,7 @@ export const ChatInput = ({
       </button>
       <button
         type="button"
-        onClick={onClear}
+        onClick={handleClear}
         title="Clear Chat"
         className="px-4 py-2 bg-[#da87d1] hover:bg-[#ca72c0] text-white rounded-lg transition-colors flex items-center gap-2"
       >
