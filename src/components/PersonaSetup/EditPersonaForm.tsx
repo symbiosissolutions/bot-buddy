@@ -3,11 +3,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { PersonaFormData, personaSchema } from "../../schemas/personaSchema";
 
+import { IPersonalityTrait } from "../../types/PersonaTypes";
+
 import { TextInput } from "./TextInput";
 import { TextAreaInput } from "./TextAreaInput";
 import { PersonalityTraitsInput } from "./PersonaTraits";
-
-import { IPersonalityTrait } from "../../types/PersonaTypes";
 import { FormError } from "./FormError";
 import { AvatarUpload } from "./AvatarUpload";
 
@@ -88,6 +88,7 @@ export const EditPersonaForm = ({
           handleTextInputChange={handleTextInputChange}
           error={errors.tagline?.message}
           showError={true}
+          autoFocus={false}
         />
       </div>
 
@@ -102,6 +103,7 @@ export const EditPersonaForm = ({
           handleTextInputChange={handleTextInputChange}
           error={errors.greeting?.message}
           showError={true}
+          autoFocus={false}
         />
       </div>
 
@@ -116,6 +118,7 @@ export const EditPersonaForm = ({
           handleTextInputChange={handleTextInputChange}
           error={errors.purpose?.message}
           showError={true}
+          autoFocus={false}
         />
       </div>
 
@@ -130,6 +133,7 @@ export const EditPersonaForm = ({
           handleTextInputChange={handleTextInputChange}
           error={errors.backstory?.message}
           showError={true}
+          autoFocus={false}
         />
       </div>
 
