@@ -6,28 +6,11 @@ import { HiMiniUserPlus } from "react-icons/hi2";
 
 import { motion } from "framer-motion";
 
-import { BASE_URL, SECRET_KEY } from "../constants/config";
-
 import { MainLayout } from "../layouts/MainLayout";
 
 import { SearchModal } from "../components/Home/SearchModal";
 
-const buddyService = {
-  async searchByTag(tag: string) {
-    const response = await fetch(`${BASE_URL}/api/v1/buddies/${tag}`, {
-      headers: {
-        "Content-Type": "application/json",
-        "secret-key": SECRET_KEY,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Buddy not found");
-    }
-
-    return response.json();
-  },
-};
+import { buddyService } from "../services";
 
 const Home = () => {
   const [showTagModal, setShowTagModal] = useState(false);

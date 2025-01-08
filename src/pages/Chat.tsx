@@ -1,9 +1,10 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { v4 as uuidv4 } from "uuid";
+import { IoArrowBack } from "react-icons/io5";
+import { FaUserEdit } from "react-icons/fa";
 
-import { SECRET_KEY, BASE_URL } from "../constants/config";
+import { v4 as uuidv4 } from "uuid";
 
 import appBackground from "../assets/bot-buddy-bg-main.jpg";
 
@@ -15,46 +16,9 @@ import { ChatLayout } from "../components/Chat/ChatLayout";
 
 import { IMessage } from "../types/ChatTypes";
 
-import { IoArrowBack } from "react-icons/io5";
-import { FaUserEdit } from "react-icons/fa";
-
-export const chatService = {
-  sendMessage: async (
-    _message: string,
-    buddyData: any,
-    messages: IMessage[],
-  ) => {
-    const payload = {
-      buddy: {
-        buddy_tag: buddyData.buddy_tag,
-        name: buddyData.name,
-        tagline: buddyData.tagline,
-        greeting: buddyData.greeting,
-        purpose: buddyData.purpose,
-        backstory: buddyData.backstory,
-        personality_traits:
-          buddyData.personality_traits || buddyData.personalityTraits,
-      },
-      messages: messages.map((msg) => ({
-        role: msg.role,
-        content: msg.content,
-      })),
-    };
-
-    const response = await fetch(`${BASE_URL}/api/v1/chat_completion`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "secret-key": SECRET_KEY,
-      },
-      body: JSON.stringify(payload),
-    });
-    return response.json();
-  },
-};
+import { chatService } from "../services";
 
 const Chat = () => {
-  // const [threadId, setThreadId] = useState<string | undefined>();
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [appInitializing, setAppInitializing] = useState(true);
   const [loadingAssistantResponse, setLoadingAssistantResponse] =

@@ -5,9 +5,9 @@ import { EditPersonaForm } from "../components/PersonaSetup/EditPersonaForm";
 
 import { PersonaFormData } from "../schemas/personaSchema";
 
-import { SECRET_KEY, BASE_URL } from "../constants/config";
-
 import { MainLayout } from "../layouts/MainLayout";
+
+import { buddyService } from "../services";
 
 export const EditPersona = () => {
   const { state } = useLocation();
@@ -35,24 +35,11 @@ export const EditPersona = () => {
     }
 
     try {
-      const response = await fetch(
-        `${BASE_URL}/api/v1/buddies/${buddyData.buddy_tag}`,
-        {
-          method: "PUT",
-          headers: {
-            "secret-key": SECRET_KEY,
-            "buddy-tag": buddyData.buddy_tag,
-          },
-          body: formData,
-        },
+      const updatedBuddy = await buddyService.updateBuddy(
+        buddyData.buddy_tag,
+        formData,
       );
-
-      if (response.ok) {
-        const updatedBuddy = await response.json();
-        navigate("/chat", { state: { buddyData: updatedBuddy } });
-      } else {
-        throw new Error("Failed to update buddy");
-      }
+      navigate("/chat", { state: { buddyData: updatedBuddy } });
     } catch (error) {
       console.error("Error updating buddy:", error);
     } finally {

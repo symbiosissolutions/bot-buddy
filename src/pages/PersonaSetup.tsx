@@ -12,7 +12,6 @@ import { generateBuddyPrompt } from "../utils/promptGenerator";
 import { IPersonaInputs, IPersonalityTrait } from "../types/PersonaTypes";
 
 import { PERSONA_QUESTIONS } from "../constants/personaQuestions";
-import { SECRET_KEY, BASE_URL } from "../constants/config";
 
 import { AvatarUpload } from "../components/PersonaSetup/AvatarUpload";
 import { PersonalityTraitsInput } from "../components/PersonaSetup/PersonaTraits";
@@ -24,6 +23,8 @@ import { TextAreaInput } from "../components/PersonaSetup/TextAreaInput";
 import { PersonaFormData, personaSchema } from "../schemas/personaSchema";
 
 import { MainLayout } from "../layouts/MainLayout";
+
+import { buddyService } from "../services";
 
 export function PersonaSetup() {
   // State management for current step, animation direction and user's persona inputs
@@ -139,26 +140,15 @@ export function PersonaSetup() {
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/api/v1/buddies/create`, {
-        method: "POST",
-        headers: {
-          "secret-key": SECRET_KEY,
-        },
-        body: formData,
-      });
+      const buddyData = await buddyService.createBuddy(formData);
 
-      if (response.ok) {
-        const buddyData = await response.json();
-        const buddyPrompt = generateBuddyPrompt(formValues as IPersonaInputs);
-        navigate("/chat", {
-          state: {
-            buddyPrompt,
-            buddyData: buddyData,
-          },
-        });
-      } else {
-        console.error("Server error:", await response.text());
-      }
+      const buddyPrompt = generateBuddyPrompt(formValues as IPersonaInputs);
+      navigate("/chat", {
+        state: {
+          buddyPrompt,
+          buddyData: buddyData,
+        },
+      });
     } catch (error) {
       console.error("Error creating buddy:", error);
     } finally {
