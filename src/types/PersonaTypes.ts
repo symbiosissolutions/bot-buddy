@@ -27,14 +27,3 @@ export interface IPersonaQuestion {
   type: "text" | "textarea" | "image" | "traits";
   placeholder?: string;
 }
-
-// Props interface for navigation buttons
-export interface INavigationButtonsProps {
-  step: number;
-  totalSteps: number;
-  onNext: () => void;
-  onPrev: () => void;
-  currentQuestionIndex: number;
-  onCreateBuddy?: () => void;
-  isCreatingBuddy?: boolean;
-}
