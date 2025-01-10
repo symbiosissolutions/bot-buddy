@@ -6,14 +6,25 @@ Bot Buddy is an interactive web application that lets users create and chat with
 
 Users can design their own characters by defining traits, backstories, and personalities, then engage in dynamic conversations with their created buddies.
 
-## Technologies Used
+### Core Dependencies
+- React 
+- TypeScript 
+- Vite 
+- React Router DOM
+- React Hook Form
 
-- **React**: A JavaScript library for building user interfaces.
-- **Vite**: A modern frontend build tool that significantly improves the development experience.
-- **TypeScript**: A typed superset of JavaScript that compiles to plain JavaScript.
-- **SWC**: A super-fast compiler that powers the transformation of TypeScript into JavaScript.
-- **Framer Motion**: Animation library for smooth UI transitions
-- **Zod**: Schema validation for form inputs
+### Data And Validation
+- Zod (Schema validation)
+- UUID (Unique ID generation)
+- Hookform/resolvers (Form validation resolvers)
+
+### Styling And Animation
+- Framer Motion (Animations)
+- React Icons
+- React Markdown
+- TailwindCSS
+- PostCSS
+- Autoprefixer
 
 ## Setup
 
@@ -43,7 +54,7 @@ yarn install
 
 3. **Configure the Environment Variables**
 
-Create a `.env` file in the root of the project and add your OpenAI API key:
+Create a `.env` file in the root of the project and add the following variables:
 
 ```plaintext
 VITE_SECRET_KEY=your_secret_key_here
