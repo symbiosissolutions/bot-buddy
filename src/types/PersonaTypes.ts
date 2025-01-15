@@ -20,6 +20,18 @@ export interface IPersonaInputs {
   personalityTraits: IPersonalityTrait[];
 }
 
+// Backend response interface
+export interface IBuddyResponse {
+  name: string;
+  tagline: string;
+  greeting: string;
+  purpose: string;
+  backstory: string;
+  avatar?: string;
+  personality_traits: string[];
+  buddy_tag: string;
+}
+
 // Define the question structure
 export interface IPersonaQuestion {
   id: keyof IPersonaInputs;

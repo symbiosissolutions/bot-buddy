@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { PersonaFormData, personaSchema } from "../../schemas/personaSchema";
 
-import { IPersonalityTrait } from "../../types/PersonaTypes";
+import { IBuddyResponse, IPersonalityTrait } from "../../types/PersonaTypes";
 
 import { TextInput } from "./TextInput";
 import { TextAreaInput } from "./TextAreaInput";
@@ -16,8 +16,7 @@ export const EditPersonaForm = ({
   onSave,
   isSaving,
 }: {
-  // buddyData: PersonaFormData;
-  buddyData: any;
+  buddyData: IBuddyResponse;
   onSave: (data: PersonaFormData) => void;
   isSaving: boolean;
 }) => {

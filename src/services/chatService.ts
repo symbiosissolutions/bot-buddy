@@ -1,6 +1,7 @@
 import { BASE_URL, SECRET_KEY } from "../constants/config";
 
 import { IMessage } from "../types/ChatTypes";
+import { IBuddyResponse } from "../types/PersonaTypes";
 
 class ChatError extends Error {
   constructor(
@@ -13,7 +14,11 @@ class ChatError extends Error {
 }
 
 export const chatService = {
-  async sendMessage(_message: string, buddyData: any, messages: IMessage[]) {
+  async sendMessage(
+    _message: string,
+    buddyData: IBuddyResponse,
+    messages: IMessage[],
+  ) {
     try {
       const payload = {
         buddy: {
@@ -23,8 +28,7 @@ export const chatService = {
           greeting: buddyData.greeting,
           purpose: buddyData.purpose,
           backstory: buddyData.backstory,
-          personality_traits:
-            buddyData.personality_traits || buddyData.personalityTraits,
+          personality_traits: buddyData.personality_traits,
         },
         messages: messages.map((msg) => ({
           role: msg.role,
