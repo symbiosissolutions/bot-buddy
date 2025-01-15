@@ -1,6 +1,6 @@
 import { FormEvent } from "react";
 
-import { IPersonaInputs } from "./PersonaTypes";
+import { IBuddyResponse, IPersonaInputs } from "./PersonaTypes";
 
 import { ROLES } from "../constants/enums";
 
@@ -27,5 +27,5 @@ export interface IChatInputProps {
 
 export interface IChatLayoutProps {
   children: React.ReactNode;
-  buddyData: IPersonaInputs;
+  buddyData: IBuddyResponse;
 }
