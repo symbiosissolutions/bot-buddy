@@ -11,6 +11,7 @@ export interface ITextInputProps {
   handleKeyPress: (e: React.KeyboardEvent) => void;
   error?: string;
   showError: boolean;
+  autoFocus?: boolean;
 }
 
 export interface ITextAreaInputProps {
@@ -23,4 +24,5 @@ export interface ITextAreaInputProps {
   ) => void;
   error?: string;
   showError: boolean;
+  autoFocus?: boolean;
 }

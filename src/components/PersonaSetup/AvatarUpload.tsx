@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { BiX } from "react-icons/bi";
 import { FcOldTimeCamera } from "react-icons/fc";
 
-interface AvatarUploadProps {
+interface IAvatarUploadProps {
   onAvatarChange: (file: File | null) => void;
   currentAvatar?: string | null;
 }
@@ -13,7 +13,7 @@ interface AvatarUploadProps {
 export const AvatarUpload = ({
   onAvatarChange,
   currentAvatar,
-}: AvatarUploadProps) => {
+}: IAvatarUploadProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(
     currentAvatar || null,

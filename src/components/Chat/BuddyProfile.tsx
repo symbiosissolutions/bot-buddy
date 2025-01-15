@@ -1,9 +1,8 @@
-// import { IPersonaInputs } from "../../types/PersonaTypes";
+import { IBuddyResponse } from "../../types/PersonaTypes";
 
 import buddyImage from "../../assets/botbuddy-logo-main.png";
-
 interface IBuddyProfileProps {
-  buddyData: any;
+  buddyData: IBuddyResponse;
 }
 
 const BuddyProfile = ({ buddyData }: IBuddyProfileProps) => {

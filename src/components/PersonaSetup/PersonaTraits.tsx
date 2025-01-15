@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 import { IPersonalityTrait } from "../../types/PersonaTypes";
 
-interface PersonaTraitsInputProps {
+interface IPersonaTraitsInputProps {
   selectedTraits: IPersonalityTrait[];
   onTraitToggle: (trait: IPersonalityTrait) => void;
 }
@@ -10,7 +10,7 @@ interface PersonaTraitsInputProps {
 export const PersonalityTraitsInput = ({
   selectedTraits,
   onTraitToggle,
-}: PersonaTraitsInputProps) => {
+}: IPersonaTraitsInputProps) => {
   const allTraits: IPersonalityTrait[] = [
     "Funny",
     "Sarcastic",

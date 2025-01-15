@@ -1,6 +1,10 @@
-import { motion, AnimatePresence } from "framer-motion";
-
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { motion, AnimatePresence } from "framer-motion";
 
 import { slideVariants } from "../utils/animationVariants";
 import { generateBuddyPrompt } from "../utils/promptGenerator";
@@ -16,16 +20,11 @@ import { FormError } from "../components/PersonaSetup/FormError";
 import { TextInput } from "../components/PersonaSetup/TextInput";
 import { TextAreaInput } from "../components/PersonaSetup/TextAreaInput";
 
-import Logo from "../assets/botbuddy-logo.png";
-
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
 import { PersonaFormData, personaSchema } from "../schemas/personaSchema";
 
-import { useNavigate } from "react-router-dom";
+import { MainLayout } from "../layouts/MainLayout";
 
-import { SECRET_KEY, BASE_URL } from "../constants/config";
+import { buddyService } from "../services";
 
 export function PersonaSetup() {
   // State management for current step, animation direction and user's persona inputs
@@ -141,29 +140,15 @@ export function PersonaSetup() {
     }
 
     try {
-      const response = await fetch(
-        `${BASE_URL}/api/v1/buddies/create`,
-        {
-          method: "POST",
-          headers: {
-            "secret-key": SECRET_KEY,
-          },
-          body: formData,
-        },
-      );
+      const buddyData = await buddyService.createBuddy(formData);
 
-      if (response.ok) {
-        const buddyData = await response.json();
-        const buddyPrompt = generateBuddyPrompt(formValues as IPersonaInputs);
-        navigate("/chat", {
-          state: {
-            buddyPrompt,
-            buddyData: buddyData,
-          },
-        });
-      } else {
-        console.error("Server error:", await response.text());
-      }
+      const buddyPrompt = generateBuddyPrompt(formValues as IPersonaInputs);
+      navigate("/chat", {
+        state: {
+          buddyPrompt,
+          buddyData: buddyData,
+        },
+      });
     } catch (error) {
       console.error("Error creating buddy:", error);
     } finally {
@@ -237,52 +222,35 @@ export function PersonaSetup() {
   };
 
   return (
-    <main className="h-screen flex flex-col bg-gradient-to-br from-indigo-50 to-pink-50 overflow-hidden">
+    <MainLayout showLogo={true}>
       {/* Progress Bar */}
       <motion.div
-        className="h-1 bg-indigo-400 rounded-full"
+        className="h-1 bg-indigo-400 rounded-full fixed left-0 right-0 top-0"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: (step + 1) / PERSONA_QUESTIONS.length }}
         transition={{ duration: 0.5 }}
       />
+      <div className="w-full relative">
+        {/* AnimatePresence handles component mounting/unmounting animations */}
+        <AnimatePresence initial={false} mode="wait" custom={direction}>
+          <motion.div
+            key={step}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            className="w-full"
+          >
+            {/* Dynamic question display */}
+            <h2 className="text-4xl font-bold mb-8 text-indigo-900">
+              {PERSONA_QUESTIONS[step].question}
+            </h2>
 
-      <div className="w-full max-w-6xl mx-auto px-4 pt-8">
-        <img src={Logo} alt="Bot Buddy Logo" className="w-40" />
-      </div>
-
-      <div className="w-full max-w-6xl mx-auto px-4 py-8 flex-1 flex">
-        <div className="w-2/3 pr-8 flex items-center">
-          <div className="w-full relative">
-            {/* AnimatePresence handles component mounting/unmounting animations */}
-            <AnimatePresence initial={false} mode="wait" custom={direction}>
-              <motion.div
-                key={step}
-                custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                className="w-full"
-              >
-                {/* Dynamic question display */}
-                <h2 className="text-4xl font-bold mb-8 text-indigo-900">
-                  {PERSONA_QUESTIONS[step].question}
-                </h2>
-
-                {/* Dynamic input rendering */}
-                <div>{renderInputComponent()}</div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
-
-        {/* Gif Container */}
-        <div className="w-1/3 flex items-center justify-center">
-          <iframe
-            className="w-full h-96 max-w-md"
-            src="https://lottie.host/embed/9fb0ec9e-d9a7-4bb3-98d1-996497f2ae5e/IeKDVPiKUJ.lottie"
-          ></iframe>
-        </div>
+            {/* Dynamic input rendering */}
+            <div>{renderInputComponent()}</div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Navigation Arrows */}
@@ -295,6 +263,6 @@ export function PersonaSetup() {
         onCreateBuddy={handleCreateBuddy}
         isCreatingBuddy={isCreatingBuddy}
       />
-    </main>
+    </MainLayout>
   );
 }

@@ -10,6 +10,7 @@ export const TextInput = ({
   handleKeyPress,
   error,
   showError,
+  autoFocus = true,
 }: ITextInputProps) => {
   return (
     <>
@@ -20,7 +21,7 @@ export const TextInput = ({
         placeholder={placeholder}
         onChange={(e) => handleTextInputChange(e.target.value, id)}
         onKeyDown={handleKeyPress}
-        autoFocus
+        autoFocus={autoFocus}
       />
       {error && showError && <FormError message={error} />}
     </>

@@ -2,9 +2,16 @@ import { motion } from "framer-motion";
 
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 
-import { INavigationButtonsProps } from "../../types/PersonaTypes";
-
 import { RiRobot3Line } from "react-icons/ri";
+interface INavigationButtonsProps {
+  step: number;
+  totalSteps: number;
+  onNext: () => void;
+  onPrev: () => void;
+  currentQuestionIndex: number;
+  onCreateBuddy?: () => void;
+  isCreatingBuddy?: boolean;
+}
 
 export const StepNavigationButtons = ({
   step,
@@ -56,7 +63,7 @@ export const StepNavigationButtons = ({
           whileTap={{ scale: 0.9 }}
         >
           <RiRobot3Line size={24} fill="white" />
-          {isCreatingBuddy ? 'Creating...' : 'Create Buddy'}
+          {isCreatingBuddy ? "Creating..." : "Create Buddy"}
         </motion.button>
       )}
     </div>
